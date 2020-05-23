@@ -2,11 +2,11 @@
 <web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
     <servlet>
         <servlet-name>TestServlet</servlet-name>
-        <servlet-class>TestServlet</servlet-class>
+        <servlet-class>com.mycompany.cs137pa3.TestServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ViewItemServlet</servlet-name>
-        <servlet-class>ViewItemServlet</servlet-class>
+        <servlet-class>com.mycompany.cs137pa3.ViewItemServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>TestServlet</servlet-name>
