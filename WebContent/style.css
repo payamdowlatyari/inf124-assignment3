@@ -211,6 +211,7 @@ a {
 .main .confirmation p {
 	padding-left: 40px;
 }
+
 .footer {
 	padding-top: 10px;
 	background-color: #1e1f29;
@@ -446,8 +447,29 @@ input[type=submit]:hover {
 
 #price-table .price-item{
 	padding-left: 150px;
+	
 }
 
 #img-detail:hover{
 	transition: 1s;
 }
+
+.quantity-option{
+	width: 150px;
+	
+}
+
+.shopping-cart{
+	box-shadow: 1px 1px 10px #555555;
+	min-height: 80px;
+	padding: 20px;
+}
+
+.shopping-cart span{
+	
+	padding: 20px;
+}
+.shopping-cart .checkout-btn{
+	float: right;
+}
+

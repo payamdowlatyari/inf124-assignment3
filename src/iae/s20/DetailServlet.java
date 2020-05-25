@@ -6,10 +6,12 @@ import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 //@WebServlet("/DetailServlet")
@@ -35,6 +37,8 @@ public class DetailServlet extends HttpServlet {
 	            out.println("<title>MainServlet</title>");  
 	            out.println("<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css\" integrity=\"sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk\" crossorigin=\"anonymous\">");
 	            out.println(" <link href=\"style.css\" rel=\"stylesheet\">");
+	            out.println(" <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js\"></script>\n" + 
+	            		"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>");
 
 	            out.println("</head>");
 	            out.println("<body>");
@@ -96,18 +100,35 @@ public class DetailServlet extends HttpServlet {
 	    	         out.println("<img src=\""+thumbnail+"\"class=\"thumbnail\" id=\"img-detail\" width=\"250\"/>");
 	    	         out.println("</td>");
 	    	         out.println("<td>");
-	        		 //out.print("<img src='" + request.getContextPath() + "/assets/'" + thumbnail + "/>");
 	                 out.println("<h4>Name: </h4>");
 	        		 out.println("<p>" +  name + " </p>");
 
-//	                 out.println("<h4>"+ summary +"</h4>");
+	                 out.println("<h4>"+ summary +"</h4>");
 	                 out.println("<h4>Category: </h4>");
 	        		 out.println("<p>" +  category + " </p>");
+	        		 
+	                
+	                 out.println("<form  action=\"CartServlet\" method=\"GET\">");
+	                 out.println("<h4>Quantity: </h4>");
+	        		 out.println(" <select class=\"quantity-option\" id=\"quantity\" onchange=\"updatePrice()\" name=\"quantity\">\n" + 
+	        		 		"                                    <option>1</option>\n" + 
+	        		 		"                                    <option>2</option>\n" + 
+	        		 		"                                    <option>3</option>\n" + 
+	        		 		"                                    <option>4</option>\n" + 
+	        		 		"                                    <option>5</option>\n" + 
+	        		 		"                                </select>");
+	                 out.println("<h4>Unit Price: </h4>");
+	        		 out.println("<p id=\"unitPrice\">$" +  price + "</p>");
+	                 out.println("<input type=hidden id=\"name\" name=\"name\" value="+ name +">");
+	                 out.println("<input type=hidden id=\"price\" name=\"price\" value="+ price +">");
 
-	                 out.println("<h4>Price: </h4>");
-	        		 out.println("<p>" +  price + " </p>");
+	        		 out.println("<h4>Total Price: </h4>");
+	        		 out.println("<span>$</span><span id=\"total-price\"></span> <br><br>");
+	        		 
+	        		 
+	                 out.println("<input type=\"submit\" value=\"Add to Cart\">");  
+	                 out.println("</form>");
 
-	               
 
 	        		 out.println("</td>");
 	        		 out.println("</tr>");

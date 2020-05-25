@@ -59,5 +59,23 @@
     <servlet-name>DetailServlet</servlet-name>
     <url-pattern>/DetailServlet</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>CartServlet</servlet-name>
+    <servlet-class>iae.s20.CartServlet</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>CartServlet</servlet-name>
+    <url-pattern>/CartServlet</url-pattern>
+  </servlet-mapping>
+   
+  <servlet>
+    <servlet-name>CheckOutServlet</servlet-name>
+    <servlet-class>iae.s20.CheckOutServlet</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>CheckOutServlet</servlet-name>
+    <url-pattern>/CheckOutServlet</url-pattern>
+  </servlet-mapping>
    
 </web-app>

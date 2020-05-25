@@ -24,7 +24,7 @@ public class ViewItemServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		  // if not exising session, create a new one
+		  // if not existing session, create a new one
         HttpSession session = request.getSession(true);
         // get the time session created
         Date createTime = new Date(session.getCreationTime());
