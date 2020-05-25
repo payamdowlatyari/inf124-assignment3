@@ -2,16 +2,62 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
   <display-name>inf124-p3v0</display-name>
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
+    <welcome-file>HomeServlet</welcome-file>
   </welcome-file-list>
  
   <servlet>
-    <servlet-name>MainServlet</servlet-name>
-    <servlet-class>iae.s20.MainServlet</servlet-class>
+    <servlet-name>ProductServlet</servlet-name>
+    <servlet-class>iae.s20.ProductServlet</servlet-class>
   </servlet>
    <servlet-mapping>
-    <servlet-name>MainServlet</servlet-name>
-    <url-pattern>/MainServlet</url-pattern>
+    <servlet-name>ProductServlet</servlet-name>
+    <url-pattern>/ProductServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>HomeServlet</servlet-name>
+    <servlet-class>iae.s20.HomeServlet</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>HomeServlet</servlet-name>
+    <url-pattern>/HomeServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ViewItemServlet</servlet-name>
+    <servlet-class>iae.s20.ViewItemServlet</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>ViewItemServlet</servlet-name>
+    <url-pattern>/ViewItemServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>AboutServlet</servlet-name>
+    <servlet-class>iae.s20.AboutServlet</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>AboutServlet</servlet-name>
+    <url-pattern>/AboutServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ContactServlet</servlet-name>
+    <servlet-class>iae.s20.ContactServlet</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>ContactServlet</servlet-name>
+    <url-pattern>/ContactServlet</url-pattern>
+  </servlet-mapping>
+  
+  
+  <servlet>
+    <servlet-name>DetailServlet</servlet-name>
+    <servlet-class>iae.s20.DetailServlet</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>DetailServlet</servlet-name>
+    <url-pattern>/DetailServlet</url-pattern>
   </servlet-mapping>
    
 </web-app>
