@@ -77,5 +77,15 @@
     <servlet-name>CheckOutServlet</servlet-name>
     <url-pattern>/CheckOutServlet</url-pattern>
   </servlet-mapping>
+  
+  
+  <servlet>
+    <servlet-name>ConfirmationServlet</servlet-name>
+    <servlet-class>iae.s20.ConfirmationServlet</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>ConfirmationServlet</servlet-name>
+    <url-pattern>/ConfirmationServlet</url-pattern>
+  </servlet-mapping>
    
 </web-app>

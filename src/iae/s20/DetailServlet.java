@@ -34,7 +34,7 @@ public class DetailServlet extends HttpServlet {
 	            out.println("<!DOCTYPE html>");
 	            out.println("<html>");
 	            out.println("<head>");
-	            out.println("<title>MainServlet</title>");  
+	            out.println("<title>Details</title>");  
 	            out.println("<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css\" integrity=\"sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk\" crossorigin=\"anonymous\">");
 	            out.println(" <link href=\"style.css\" rel=\"stylesheet\">");
 	            out.println(" <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js\"></script>\n" + 
@@ -91,7 +91,19 @@ public class DetailServlet extends HttpServlet {
 	    	         detail = rs.getString("detail");
 	    	         price = rs.getString("price");
 	    	         thumbnail = "assets/" + thumbnail; 
-
+	    	         
+	    	         
+	    	         HttpSession session = request.getSession(); /* Creating a new session*/	    	         
+	    	         session.setAttribute("id", id); 
+	    	         session.setAttribute("name", name); 
+	    	         session.setAttribute("summary", summary); 
+	    	         session.setAttribute("thumbnail", thumbnail); 
+	    	         session.setAttribute("category", category); 
+	    	         session.setAttribute("detail", detail); 
+	    	         session.setAttribute("price", price); 
+	    	         
+	    	        // session.setAttribute("price", price);
+	    	        // session.setAttribute("id", qut);
 	    	        // print the results
 	    	         out.println("<table width=\"100%\" cellspacing=\"20\">");
 	    	         out.println("<tbody>");
@@ -121,6 +133,7 @@ public class DetailServlet extends HttpServlet {
 	        		 out.println("<p id=\"unitPrice\">$" +  price + "</p>");
 	                 out.println("<input type=hidden id=\"name\" name=\"name\" value="+ name +">");
 	                 out.println("<input type=hidden id=\"price\" name=\"price\" value="+ price +">");
+	                 out.println("<input type=hidden id=\"id\" name=\"id\" value="+ id +">");
 
 	        		 out.println("<h4>Total Price: </h4>");
 	        		 out.println("<span>$</span><span id=\"total-price\"></span> <br><br>");

@@ -3,12 +3,16 @@ package iae.s20;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.DecimalFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class CheckOutServlet
@@ -37,9 +41,12 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                out.println("<!DOCTYPE html>");
                out.println("<html>");
                out.println("<head>");
-               out.println("<title>Contact Us</title>");  
+               out.println("<title>Check Out</title>");  
                out.println("<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css\" integrity=\"sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk\" crossorigin=\"anonymous\">");
                out.println(" <link href=\"style.css\" rel=\"stylesheet\">");
+               out.println(" <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js\"></script>\n" + 
+	            		"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>");
+
                out.println("</head>");
                out.println("<body>");          
                out.println("<div class=\"container\">");         
@@ -57,11 +64,64 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                out.println("<li><a href=\"ContactServlet\">Contact Us</a></li>");
                out.println("</ul></div></div>");
                out.println(" <div class=\"main\">");
-               out.println(" <div class=\"content\">");          
+               out.println(" <div class=\"content\">"); 
+               
+              
+               //String quantity = request.getParameter("quantity");
+               //String id = request.getParameter("id"); 
+               HttpSession session = request.getSession(false);
+               String id = (String)session.getAttribute("id"); 
+               String quantity = (String)session.getAttribute("quantity"); 
+               
+               float priceFloat = (float)session.getAttribute("priceFloat");
+               
+               
+               
+               //String priceFloat = (String)session.getAttribute(""); 
+               out.println("<div id=\"price-float\">" + priceFloat +"</div>");
+
+               
+               try {   
+            	   
+            	  
+                   String name = "";
+    	    		String summary= "";
+    	    		String thumbnail = "";
+    	    		String category = "";
+    	    		String detail = "";
+    	    		String price = "";
+	    			
+	    			java.sql.Connection connection = DatabaseConnection.connect();
+	                Statement st = connection.createStatement();    	 
+	                ResultSet rs = st.executeQuery("SELECT * FROM products where id= " + id);
+
+	    	      
+	    	      if (rs.next())
+	    	      {
+	    	    	 //id = rs.getString("id");
+	    	    	 
+	    	         name = rs.getString("name"); 
+	    	         summary = rs.getString("summary");
+	    	         thumbnail = rs.getString("thumbnail");
+	    	         category = rs.getString("category");
+	    	         detail = rs.getString("detail");
+	    	         price = rs.getString("price");
+	    	         
+	    	         
+	    	      }
+	    	      
+//	    	      	float pi = Float.valueOf(price.trim()).floatValue();
+//   	           		float qi = Float.valueOf(quantity.trim()).floatValue();
+//   	           		float priceFloat = pi*qi;
+//   	           		DecimalFormat decimalFormat = new DecimalFormat("#.00");
+//   	           		String totalPrice = decimalFormat.format(priceFloat);
+   	           		
+   	           		
+   	           		
                out.println(" <h1><br>Check Out Form</h1>\n" + 
                		"                <div class=\"orderform\">\n" + 
-               		"                    <form name=\"submitform\" id=\"submitform\" method=\"post\" action=\"detail.php\">\n" + 
-               		"                        <p class=\"form-message\"><?=(isset($errorMessage))?$errorMessage:\"\";?></p>\n" + 
+               		"                    <form name=\"submitform\" id=\"submitform\" method=\"GET\" action=\"ConfirmationServlet\">\n" + 
+               		"                        <p class=\"form-message\"></p>\n" + 
                		"                        <div class=\"row\">\n" + 
                		"                            <div class=\"col-50\">\n" + 
                		"                                <h3>Buyer's Information</h3>\n" + 
@@ -71,10 +131,9 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                                <label for=\"lname\"> Last Name</label>\n" + 
                		"                                <input type=\"text\" id=\"lname\" name=\"lastname\" placeholder=\"White\" required />\n" + 
                		"                                <label for=\"email\"> Email\n" + 
-               		"                                    <?= (isset($error[\"email\"])) ? $error[\"email\"] : \"\"; ?></label>\n" + 
+               		"                                    </label>\n" + 
                		"                                <input type=\"text\" id=\"email\" name=\"email\" placeholder=\"john@example.com\" required />\n" + 
                		"                                <label for=\"phone\"> Phone Number\n" + 
-               		"                                    <?= (isset($error[\"phone\"])) ? $error[\"phone\"] : \"\"; ?></label>\n" + 
                		"                                <input type=\"text\" id=\"phone\" name=\"phone\" placeholder=\"123-123-1234\" required />\n" + 
                		"                                <h3>Shipping Address</h3>\n" + 
                		"                                <br />\n" + 
@@ -91,7 +150,7 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                                        <div id=\"stateList\"></div>\n" + 
                		"                                    </div>\n" + 
                		"                                    <div class=\"col-50\">\n" + 
-               		"                                        <label for=\"zip\">Zip <?= (isset($error[\"zip\"])) ? $error[\"zip\"] : \"\"; ?></label>\n" + 
+               		"                                        <label for=\"zip\">Zip</label>\n" + 
                		"                                        <input type=\"text\" id=\"zip\" name=\"zip\" placeholder=\"10001\" required />\n" + 
                		"                                    </div>\n" + 
                		"                                </div>\n" + 
@@ -125,33 +184,38 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                            <div class=\"col-50\">\n" + 
                		"                                <h3>Order Details</h3>\n" + 
                		"                                <br />\n" + 
-               		"                                <label>Product Name</label>\n" + 
-               		"                                <h4 style=\"margin-bottom: 20px;\"><?= $stmt['name']; ?> ($<?= $stmt['price']; ?>)</h4>\n" + 
-               		"                                <input type=\"hidden\" id=\"pid\" name=\"productid\" value=\"<?= $_GET['id']; ?>\" />\n" + 
-               		"                                <label for=\"quantity\">Quantity\n" + 
-               		"                                    <?= (isset($error[\"quantity\"])) ? $error[\"quantity\"] : \"\"; ?></label>\n" + 
-               		"                                <select id=\"quantity\" onchange=\"updatePrice()\" name=\"quantity\">\n" + 
-               		"                                    <option>1</option>\n" + 
-               		"                                    <option>2</option>\n" + 
-               		"                                    <option>3</option>\n" + 
-               		"                                    <option>4</option>\n" + 
-               		"                                    <option>5</option>\n" + 
-               		"                                </select>\n" + 
+//               		"                                <label>Product Name</label>\n" + 
+//               		"                                <h4 style=\"margin-bottom: 20px;\">" + name + "</h4>\n" + 
+               		"                                <input type=\"hidden\" id=\"pid\" name=\"productid\" value=\"12345\" />\n" + 
+
+               		"                                <input type=\"hidden\" id=\"id\" name=\"id\" value=\"1\" />\n" + 
+
+//               		"                                <label for=\"quantity\">Quantity\n" + 
+//               																				"</label>\n" + 
+//               		"                                <select id=\"quantity\" onchange=\"updatePrice()\" name=\"quantity\" value= "+quantity+">\n" + 
+//               		"                                    <option>1</option>\n" + 
+//               		"                                    <option>2</option>\n" + 
+//               		"                                    <option>3</option>\n" + 
+//               		"                                    <option>4</option>\n" + 
+//               		"                                    <option>5</option>\n" + 
+//               		"                                </select>\n" + 
+//					
+// 					"								<label for=\"cname\">Quantity</label>\n" + 
+ 					"                               		 <input type=\"hidden\" id=\"quantity-form\" name=\"quantity\" placeholder="+ quantity +" required />\n" + 
                		"                                <label for=\"method\">Shipping method</label>\n" + 
                		"                                <select id=\"method\" name=\"method\">\n" + 
                		"                                    <option>Overnight ($11.00)</option>\n" + 
                		"                                    <option selected>2-day expedited ($9.50)</option>\n" + 
                		"                                    <option>7-day ground ($6.25)</option>\n" + 
-               		"                                </select>\n" + 
+               		"                                </select><br><br>\n" + 
                		"                                <h3>Payment Information</h3>\n" + 
-               		"                                <br />\n" + 
+               		"                                <br>\n" + 
                		"                                <label for=\"cname\">Name on Card</label>\n" + 
                		"                                <input type=\"text\" id=\"cname\" name=\"cardname\" placeholder=\"John More Doe\" required />\n" + 
                		"                                <label for=\"ccnum\">Credit card number</label>\n" + 
                		"                                <input type=\"text\" id=\"ccnum\" name=\"cardnumber\" placeholder=\"1111-2222-3333-4444\"\n" + 
                		"                                    required />\n" + 
-               		"                                <label for=\"expmonth\">Exp Month\n" + 
-               		"                                    <?= (isset($error[\"expmonth\"])) ? $error[\"expmonth\"] : \"\"; ?></label>\n" + 
+               		"                                <label for=\"expmonth\">Exp Month\n" + "</label>\n" + 
                		"                                <select id=\"expmonth\" name=\"expmonth\" placeholder=\"September\" required>\n" + 
                		"                                    <option selected>1</option>\n" + 
                		"                                    <option>2</option>\n" + 
@@ -170,11 +234,11 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                                <div class=\"row\">\n" + 
                		"                                    <div class=\"col-50\">\n" + 
                		"                                        <label for=\"expyear\">Exp Year\n" + 
-               		"                                            <?= (isset($error[\"expyear\"])) ? $error[\"expyear\"] : \"\"; ?></label>\n" + 
+               		"                                           </label>\n" + 
                		"                                        <input type=\"text\" id=\"expyear\" name=\"expyear\" placeholder=\"2018\" required />\n" + 
                		"                                    </div>\n" + 
                		"                                    <div class=\"col-50\">\n" + 
-               		"                                        <label for=\"cvv\">CVV <?= (isset($error[\"cvv\"])) ? $error[\"cvv\"] : \"\"; ?></label>\n" + 
+               		"                                        <label for=\"cvv\">CVV</label>\n" + 
                		"                                        <input type=\"text\" id=\"cvv\" name=\"cvv\" placeholder=\"352\" required />\n" + 
                		"                                    </div>\n" + 
                		"                                    <br /><br />\n" + 
@@ -182,10 +246,10 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                                <div id=\"price-table\">\n" + 
                		"\n" + 
                		"                                    <div>Total Price:</div>\n" + 
-               		"                                    <div class=\"price-item\">&nbsp; &nbsp;$<span id=\"total-price\"></span></div>\n" + 
+               		"                                    <div class=\"price-item\">&nbsp; &nbsp;$<span id=\"total-price\">"+ priceFloat +"</span></div>\n" + 
                		"\n" + 
                		"                                    <div>Total Tax: </div>\n" + 
-               		"                                    <div class=\"price-item\">+ $<span id=\"tax-amount\"></span></div>\n" + 
+               		"                                    <div class=\"price-item\">+ $<span id=\"tax-amount\"></span>" +"</div>\n" + 
                		"                                    <div>\n" + 
                		"                                        <div>Shipping: </div>\n" + 
                		"                                        <div class=\"price-item\">+ $<span id=\"shipping\"></span></div>\n" + 
@@ -193,8 +257,7 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"\n" + 
                		"                                    <div>\n" + 
                		"                                        <h4>Final Price</h4>\n" + 
-               		"                                        <div class=\"price-item\">= $<span id=\"final-price\"></span></div>\n" + 
-               		"                                        <input type=\"hidden\" id=\"totalPrice\" name=\"totalPrice\" value=\"\" />\n" + 
+               		"                                        <div class=\"price-item\">= $<span id=\"final-price\">" +" </span></div>\n" + 
                		"                                    </div>\n" + 
                		"                                </div>\n" + 
                		"                            </div>\n" + 
@@ -259,9 +322,24 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"    </p>\n" + 
                		"</div>");       
                out.println("</div>");
-               out.println(" <script type=\"text/javascript\" src=\"main.js\"></script>");
+               out.println(" <script type=\"text/javascript\" src=\"checkout.js\"></script>");
                out.println("</body>");
-               out.println("</html>");			
+               out.println("</html>");	
+               
+	    	                
+}
+catch (Exception e)
+{
+    System.err.println ("Cannot connect to database server");
+    e.printStackTrace();
+
+
+} 
+finally 
+{    			
+	DatabaseConnection.disconnect();
+}
+
     }
 
 

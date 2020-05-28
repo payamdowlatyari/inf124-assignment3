@@ -3,13 +3,20 @@ function sendEmail() {
 }
 
 var quantity = 1;
-var price = document.getElementById('unitPrice').innerHTML.substring(1);
+var price = 0;
+//var quantityOptions = 1;
+price = document.getElementById('unitPrice').innerHTML.substring(1);
+
 var total = quantity * price;
 
 function updatePrice() {
   quantityOptions = document.getElementById('quantity').value;
+  price = document.getElementById('unitPrice').innerHTML.substring(1);
   quantity = quantityOptions;
   total = quantity * price;
+  console.log(quantity);
+  console.log(price);
+
 }
 
 // form validation
@@ -62,46 +69,46 @@ $(document).ready(function () {
   var shipping = 9.50;
 
 
-  $('#state').keyup(function () {
-    var query = $(this).val();
-    if (query != '') {
-      $.ajax({
-        url: "./php/searchState.php",
-        method: "POST",
-        data: {
-          query: query
-        },
-        success: function (data) {
-          $('#stateList').fadeIn();
-          $('#stateList').html(data);
-        }
-      });
-    }
-  });
-  $(document).on('click', 'li', function () {
-    $('#state').val($(this).text());
-    $('#stateList').fadeOut();
-  });
+//  $('#state').keyup(function () {
+//    var query = $(this).val();
+//    if (query != '') {
+//      $.ajax({
+//        url: "./php/searchState.php",
+//        method: "POST",
+//        data: {
+//          query: query
+//        },
+//        success: function (data) {
+//          $('#stateList').fadeIn();
+//          $('#stateList').html(data);
+//        }
+//      });
+//    }
+//  });
+//  $(document).on('click', 'li', function () {
+//    $('#state').val($(this).text());
+//    $('#stateList').fadeOut();
+//  });
 
 
-  $('#zip').keyup(function () {
-
-    var query = $(this).val();
-    if (query != '') {
-      $.ajax({
-        url: "./php/searchTaxRate.php",
-        method: "POST",
-        data: {
-          query: query
-        },
-        success: function (data) {
-          $('#tax-rate').fadeIn();
-          $('#tax-rate').html(data);
-          taxRate = parseFloat(data).toFixed(3);
-        }
-      });
-    }
-  });
+//  $('#zip').keyup(function () {
+//
+//    var query = $(this).val();
+//    if (query != '') {
+//      $.ajax({
+//        url: "./php/searchTaxRate.php",
+//        method: "POST",
+//        data: {
+//          query: query
+//        },
+//        success: function (data) {
+//          $('#tax-rate').fadeIn();
+//          $('#tax-rate').html(data);
+//          taxRate = parseFloat(data).toFixed(3);
+//        }
+//      });
+//    }
+//  });
 
 
   $('#method').change(function () {
@@ -117,13 +124,19 @@ $(document).ready(function () {
     }
   });
 
-  $(document).mouseover(function () {
+  $(document).mouseover(function () {  
 
     $('#total-price').html(total.toFixed(2));
+    
     $('#tax-amount').html((total * taxRate).toFixed(2));
-
+    //console.log(quantityOptions);
+    //let totalPrice = document.getElementById('unitPrice').innerHTML.substring(1);
+    //console.log(price*quantity);
+    //console.log(quantity);
     let final = (total + (total * taxRate) + shipping);
+    //console.log(final);
     $('#shipping').html(shipping.toFixed(2));
+
     $('#final-price').html(final.toFixed(2))
     $('input[id=totalPrice]').val(final.toFixed(2));
   })

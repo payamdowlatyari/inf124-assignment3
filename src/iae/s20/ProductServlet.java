@@ -43,6 +43,9 @@ public class ProductServlet extends HttpServlet {
             out.println("<title>Products</title>");  
             out.println("<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css\" integrity=\"sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk\" crossorigin=\"anonymous\">");
             out.println(" <link href=\"style.css\" rel=\"stylesheet\">");
+            out.println(" <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js\"></script>\n" + 
+            		"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>");
+
             out.println("</head>");
             out.println("<body>");          
             out.println("<div class=\"container\">");         
@@ -94,7 +97,7 @@ public class ProductServlet extends HttpServlet {
     	         out.println("<img src=\""+thumbnail+"\"/>");
     	         out.println("<h4>"+ category +"</h4>");
                  out.println("<h2>"+ name +"</h2>");
-                 out.println("<h3>"+ price +"</h3>");
+                 out.println("<h3 id=\"unitPrice\">"+ price +"</h3>");
 
                  out.println("<form  action=\"DetailServlet\" method=\"GET\">");
                  out.println("<input type=hidden id=id name=id value="+ id +">");
