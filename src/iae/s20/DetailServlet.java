@@ -102,8 +102,7 @@ public class DetailServlet extends HttpServlet {
 	    	         session.setAttribute("detail", detail); 
 	    	         session.setAttribute("price", price); 
 	    	         
-	    	        // session.setAttribute("price", price);
-	    	        // session.setAttribute("id", qut);
+	    	      
 	    	        // print the results
 	    	         out.println("<table width=\"100%\" cellspacing=\"20\">");
 	    	         out.println("<tbody>");

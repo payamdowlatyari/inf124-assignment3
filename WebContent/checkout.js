@@ -4,6 +4,7 @@
 		var shipping = 9.50;
 		var taxRate = 0;
 		var totalPrice = document.getElementById('total-price').textContent;
+		var quantity = document.getElementById('quantity-form').textContent;
 		
   $('#method').change(function () {
 	  
@@ -23,8 +24,7 @@
   $("#zip").keypress(function(){
 	
 	  let zip = $(this).val();
-	  console.log(zip);
-	  
+	  console.log(zip);	  
 	  
   })
   
@@ -33,18 +33,14 @@
 	  
 
     $('#tax-amount').html((totalPrice * taxRate).toFixed(2));
-    //console.log(quantityOptions);
-    //let totalPrice = document.getElementById('unitPrice').innerHTML.substring(1);
-    //console.log(price*quantity);
-    //console.log(totalPrice);
-    let final = ( parseFloat(totalPrice) + parseFloat(shipping));
+ 
+    let final = (parseFloat(totalPrice) + parseFloat(shipping));
     //console.log(parseFloat(totalPrice));
     //console.log(parseFloat(final));
 
-    //console.log(final);
    $('#shipping').html(shipping.toFixed(2));
 
-    $('#final-price').text(final);
+    $('#final-price').text(final.toFixed(2));
     $('input[id=totalPrice]').val(final);
   })
 

@@ -67,19 +67,18 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                out.println(" <div class=\"content\">"); 
                
               
-               //String quantity = request.getParameter("quantity");
-               //String id = request.getParameter("id"); 
+           
                HttpSession session = request.getSession(false);
+               
                String id = (String)session.getAttribute("id"); 
                String quantity = (String)session.getAttribute("quantity"); 
-               
                float priceFloat = (float)session.getAttribute("priceFloat");
                
-               
-               
-               //String priceFloat = (String)session.getAttribute(""); 
-               out.println("<div id=\"price-float\">" + priceFloat +"</div>");
-
+               			session.setAttribute(id, "id");
+                             
+                              
+                              DecimalFormat df = new DecimalFormat();
+                              df.setMaximumFractionDigits(2);
                
                try {   
             	   
@@ -98,29 +97,20 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
 	    	      
 	    	      if (rs.next())
 	    	      {
-	    	    	 //id = rs.getString("id");
 	    	    	 
 	    	         name = rs.getString("name"); 
 	    	         summary = rs.getString("summary");
 	    	         thumbnail = rs.getString("thumbnail");
 	    	         category = rs.getString("category");
 	    	         detail = rs.getString("detail");
-	    	         price = rs.getString("price");
-	    	         
+	    	         price = rs.getString("price");  	         
 	    	         
 	    	      }
-	    	      
-//	    	      	float pi = Float.valueOf(price.trim()).floatValue();
-//   	           		float qi = Float.valueOf(quantity.trim()).floatValue();
-//   	           		float priceFloat = pi*qi;
-//   	           		DecimalFormat decimalFormat = new DecimalFormat("#.00");
-//   	           		String totalPrice = decimalFormat.format(priceFloat);
-   	           		
-   	           		
+	    	      	    	      
    	           		
                out.println(" <h1><br>Check Out Form</h1>\n" + 
                		"                <div class=\"orderform\">\n" + 
-               		"                    <form name=\"submitform\" id=\"submitform\" method=\"GET\" action=\"ConfirmationServlet\">\n" + 
+               		"                    <form name=\"submitform\" id=\"submitform\" method=\"POST\" action=\"ConfirmationServlet\">\n" + 
                		"                        <p class=\"form-message\"></p>\n" + 
                		"                        <div class=\"row\">\n" + 
                		"                            <div class=\"col-50\">\n" + 
@@ -135,7 +125,7 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                                <input type=\"text\" id=\"email\" name=\"email\" placeholder=\"john@example.com\" required />\n" + 
                		"                                <label for=\"phone\"> Phone Number\n" + 
                		"                                <input type=\"text\" id=\"phone\" name=\"phone\" placeholder=\"123-123-1234\" required />\n" + 
-               		"                                <h3>Shipping Address</h3>\n" + 
+               		"                               <br><br> <h3>Shipping Address</h3>\n" + 
                		"                                <br />\n" + 
                		"\n" + 
                		"                                <label for=\"adr\"> Address</label>\n" + 
@@ -184,24 +174,11 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                            <div class=\"col-50\">\n" + 
                		"                                <h3>Order Details</h3>\n" + 
                		"                                <br />\n" + 
-//               		"                                <label>Product Name</label>\n" + 
-//               		"                                <h4 style=\"margin-bottom: 20px;\">" + name + "</h4>\n" + 
+               		"                                <input type=\"hidden\" style=\"margin-bottom: 20px\" name=id value= \"" + id +"\" >\n" + 
                		"                                <input type=\"hidden\" id=\"pid\" name=\"productid\" value=\"12345\" />\n" + 
-
-               		"                                <input type=\"hidden\" id=\"id\" name=\"id\" value=\"1\" />\n" + 
-
-//               		"                                <label for=\"quantity\">Quantity\n" + 
-//               																				"</label>\n" + 
-//               		"                                <select id=\"quantity\" onchange=\"updatePrice()\" name=\"quantity\" value= "+quantity+">\n" + 
-//               		"                                    <option>1</option>\n" + 
-//               		"                                    <option>2</option>\n" + 
-//               		"                                    <option>3</option>\n" + 
-//               		"                                    <option>4</option>\n" + 
-//               		"                                    <option>5</option>\n" + 
-//               		"                                </select>\n" + 
-//					
-// 					"								<label for=\"cname\">Quantity</label>\n" + 
- 					"                               		 <input type=\"hidden\" id=\"quantity-form\" name=\"quantity\" placeholder="+ quantity +" required />\n" + 
+			
+ 					"								<label for=\"cname\">Quantity</label>\n" + 
+ 					"                               		 <input type=\"text\" id=\"quantity-form\" name=\"quantity\" value="+ quantity +" required />\n" + 
                		"                                <label for=\"method\">Shipping method</label>\n" + 
                		"                                <select id=\"method\" name=\"method\">\n" + 
                		"                                    <option>Overnight ($11.00)</option>\n" + 
@@ -245,10 +222,11 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                                </div>\n" + 
                		"                                <div id=\"price-table\">\n" + 
                		"\n" + 
-               		"                                    <div>Total Price:</div>\n" + 
-               		"                                    <div class=\"price-item\">&nbsp; &nbsp;$<span id=\"total-price\">"+ priceFloat +"</span></div>\n" + 
-               		"\n" + 
-               		"                                    <div>Total Tax: </div>\n" + 
+               		"                                    <div>Total Price:</div>\n" +
+               		
+               		"                                    <div class=\"price-item\">&nbsp; &nbsp;$<span id=\"total-price\">"+ df.format(priceFloat) +"</span></div>\n" );
+//               												out.printf("%.2f", priceFloat);
+               												out.println("<div>Total Tax: </div>\n" + 
                		"                                    <div class=\"price-item\">+ $<span id=\"tax-amount\"></span>" +"</div>\n" + 
                		"                                    <div>\n" + 
                		"                                        <div>Shipping: </div>\n" + 
@@ -348,8 +326,7 @@ finally
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+		service(request, response);	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

@@ -33,23 +33,8 @@ public class CartServlet extends HttpServlet {
            response.setContentType("text/html");
            response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
            PrintWriter out = response.getWriter();
-           
-           
-           //String qt = (String)session.getAttribute("quantity"); 
-           //String price = (String)session.getAttribute("price"); 
-           
+
            String quantity = request.getParameter("quantity");
-//           String price = request.getParameter("price"); 
-//           String name = request.getParameter("name"); 
-//           
-//           //String priceCart = quantity;
-//           
-//           float pi = Float.valueOf(price.trim()).floatValue();
-//           float qi = Float.valueOf(quantity.trim()).floatValue();
-//           float priceFloat = pi*qi;
-           
-        		//priceCart = Integer.toString( Integer.valueOf(quantity));
-        		//priceCart= Integer.toString((price));
           
            HttpSession session = request.getSession(false);
            String id = (String)session.getAttribute("id"); 
@@ -59,18 +44,11 @@ public class CartServlet extends HttpServlet {
            float qi = Float.valueOf(quantity.trim()).floatValue();
            float priceFloat = pi * qi;
            
-           String totalPrice = "";
-           
-           
+           //String totalPrice = "";
+   
 	         session.setAttribute("quantity", quantity); 
 	         session.setAttribute("priceFloat", priceFloat);
-	         
-	         
-	         
-	         //session.setAttribute("pricef", priceFloat);
-           
-           
-           
+
                out.println("<!DOCTYPE html>");
                out.println("<html>");
                out.println("<head>");
@@ -79,7 +57,6 @@ public class CartServlet extends HttpServlet {
                out.println(" <link href=\"style.css\" rel=\"stylesheet\">");
                out.println(" <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js\"></script>\n" + 
 	            		"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>");
-
                out.println("</head>");
                out.println("<body>");          
                out.println("<div class=\"container\">");         
@@ -98,14 +75,8 @@ public class CartServlet extends HttpServlet {
                out.println("</ul></div></div>");
                out.println(" <div class=\"main\">");
                out.println(" <div class=\"content\">");          
-               out.println("<br><br>  <h1>Shopping Card</h1>");
-               
-               //out.println("<h1>"+priceFloat+"</h1>");
-               
-               //int priceCartInt = Integer.parseInt(price) * Integer.parseInt(quantity);
-               
-               
-              out.println("<div class=\"shopping-cart\"> <form method=\"GET\" action=\"CheckOutServlet\">\n" + 
+               out.println("<br><br>  <h1>Shopping Card</h1>");                             
+               out.println("<div class=\"shopping-cart\"> <form method=\"GET\" action=\"CheckOutServlet\">\n" + 
             			"               <span class=\"price-item\">"+ name +"</span>" + 
                   		"\n" + 
               		"               <span class=\"price-item\" id=\"price-cart\">&nbsp; &nbsp;$"+ price +"</span>" + 
@@ -115,14 +86,12 @@ public class CartServlet extends HttpServlet {
               		" <span class=\"price-item\" id=\"total-price-cart\"> <span>" + priceFloat +"</span></span>" + 
 
               		"<input type=hidden id=\"quantity-cart\" name=\"quantity\" value="+ quantity +">" +
-              		"                   <input class=\"checkout-btn\" type=\"submit\" value=\"Check Out\">\n" + 
-              		              
+              		"                   <input class=\"checkout-btn\" type=\"submit\" value=\"Check Out\">\n" +             		              
 
               		"               </form> </div>");
-
-       		 out.println("</div>");
-       		 out.println("</div>");	
-       		 out.println("<br><div class=\"footer\">\n" + 
+       		  out.println("</div>");
+       		  out.println("</div>");	
+       		  out.println("<br><div class=\"footer\">\n" + 
        				 "        <table width=\"100%\" cellspacing=\"20\">\n" + 
                		"    <div class=\"content\">\n" + 
                		"            <tbody>\n" + 
@@ -183,8 +152,7 @@ public class CartServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+		service(request, response);	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

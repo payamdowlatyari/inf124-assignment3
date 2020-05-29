@@ -4,7 +4,7 @@ function sendEmail() {
 
 var quantity = 1;
 var price = 0;
-//var quantityOptions = 1;
+var quantityOptions = 1;
 price = document.getElementById('unitPrice').innerHTML.substring(1);
 
 var total = quantity * price;
@@ -65,88 +65,20 @@ $(document).ready(function () {
 // using jQuery and Ajax for form autocomplete
 $(document).ready(function () {
 
-  var taxRate = 0;
   var shipping = 9.50;
-
-
-//  $('#state').keyup(function () {
-//    var query = $(this).val();
-//    if (query != '') {
-//      $.ajax({
-//        url: "./php/searchState.php",
-//        method: "POST",
-//        data: {
-//          query: query
-//        },
-//        success: function (data) {
-//          $('#stateList').fadeIn();
-//          $('#stateList').html(data);
-//        }
-//      });
-//    }
-//  });
-//  $(document).on('click', 'li', function () {
-//    $('#state').val($(this).text());
-//    $('#stateList').fadeOut();
-//  });
-
-
-//  $('#zip').keyup(function () {
-//
-//    var query = $(this).val();
-//    if (query != '') {
-//      $.ajax({
-//        url: "./php/searchTaxRate.php",
-//        method: "POST",
-//        data: {
-//          query: query
-//        },
-//        success: function (data) {
-//          $('#tax-rate').fadeIn();
-//          $('#tax-rate').html(data);
-//          taxRate = parseFloat(data).toFixed(3);
-//        }
-//      });
-//    }
-//  });
-
-
-  $('#method').change(function () {
-    var choice = $(this).val();
-    if (choice == "Overnight ($11.00)") {
-      shipping = 11.00;
-    }
-    if (choice == "2-day expedited ($9.50)") {
-      shipping = 9.50;
-    }
-    if (choice == "7-day ground ($6.25)") {
-      shipping = 6.25;
-    }
-  });
 
   $(document).mouseover(function () {  
 
     $('#total-price').html(total.toFixed(2));
-    
-    $('#tax-amount').html((total * taxRate).toFixed(2));
-    //console.log(quantityOptions);
-    //let totalPrice = document.getElementById('unitPrice').innerHTML.substring(1);
-    //console.log(price*quantity);
-    //console.log(quantity);
+       
     let final = (total + (total * taxRate) + shipping);
-    //console.log(final);
+    
     $('#shipping').html(shipping.toFixed(2));
 
     $('#final-price').html(final.toFixed(2))
     $('input[id=totalPrice]').val(final.toFixed(2));
   })
 
-  // billing address
-  $('#billing-address').hide();
-
-  $('#same-address').change(function () {
-    $('#billing-address').slideToggle();
-  })
-
+ 
 });
 

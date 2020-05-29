@@ -81,6 +81,7 @@ public class ProductServlet extends HttpServlet {
                 
                 out.println("<table width=\"100% cellspacing=20\">");
                 out.println( "<tbody><tr>");
+                
     	      // iterate through the java resultset
     	      while (rs.next())
     	      {

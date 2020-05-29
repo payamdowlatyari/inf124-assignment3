@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +44,6 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                out.println(" <link href=\"style.css\" rel=\"stylesheet\">");
                out.println(" <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js\"></script>\n" + 
 	            		"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>");
-
                out.println("</head>");
                out.println("<body>");          
                out.println("<div class=\"container\">");         
@@ -68,97 +65,125 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                out.println(" <h1><br>Confirmation</h1>\n");
                
                
-               try {              
- 
-            	   
-            	   int id = 1;
-            	   String firstname = "";
-                   String lastname = "";
-                   String email = "";
-                   String phone = "";
-                   String address = "";
-                   String city = "";
-                   String state = "";
-                   int zip = 00000;
-                   String billaddr = "";
-                   String billcity = "";
-                   String billstate = "";
-                   int billzip = 00000;
-                   //boolean sameaddr = true;
-                   String cardname = "";
-                   String cardnumber = "";
-                   int expmonth = 00;
-                   int expyear = 0000;
-                   int cvv = 000;            	   
-                   String method = "";
-                   int productid = 0000;
-                   int quantity = 1;
-                  
+               try {                               
                 
                
-            	     id = Integer.parseInt(request.getParameter("id")); 
-            	     firstname = request.getParameter("firstname");
-            	     lastname = request.getParameter("lastname");
-            	     email = request.getParameter("email");
-            	     phone = request.getParameter("phone");
-            	     address = request.getParameter("address");
-            	     city = request.getParameter("city");
-            	     state = request.getParameter("state");
-                     zip = Integer.parseInt(request.getParameter("zip"));
-                     billaddr = request.getParameter("billaddr");                   
-                     billcity = request.getParameter("billcity");
-            	     billstate = request.getParameter("billstate");
-                     billzip = Integer.parseInt(request.getParameter("billzip"));
-                     cardname = request.getParameter("cardname");
-                     cardnumber = request.getParameter("cardnumber");
-                     expmonth = Integer.parseInt(request.getParameter("expmonth"));
-                     expyear = Integer.parseInt(request.getParameter("expyear"));
-                     cvv = Integer.parseInt(request.getParameter("cvv"));            	   
-                     method = request.getParameter("method");
-                     productid = Integer.parseInt(request.getParameter("productid"));
-                     quantity = Integer.parseInt(request.getParameter("quantity"));
+            	   HttpSession session = request.getSession();
+            	   
+            	   	 String name = (String) session.getAttribute("name");
+            	   	 String thumbnail = (String) session.getAttribute("thumbnail");
+            	   
+                     int id = Integer.parseInt((String) session.getAttribute("id")); 
+                     int quantity = Integer.parseInt((String)session.getAttribute("quantity")); 
+                     //float totalPrice = Float.parseFloat((String)session.getAttribute("priceFloat"));
+                     
+                     String firstname = request.getParameter("firstname");
+                     String lastname = request.getParameter("lastname");
+                     String email = request.getParameter("email");
+          	         String phone = request.getParameter("phone");
+          	       
+            	     String address = request.getParameter("address");
+            	     String city = request.getParameter("city");
+            	     String state = request.getParameter("state");
+           	     
+                     int zip = Integer.parseInt(request.getParameter("zip"));            	     
+            	     
+            	     String billaddr;
+            	     String billcity;
+            	     String billstate;
+            	     int billzip;
+            	     
+            	     boolean sameaddr = request.getParameter("sameaddr") != null;
+            	     
+            	     if (sameaddr == false) {
+            	    	 
+                	      billaddr = request.getParameter("billaddr");  
+                 	      billcity = request.getParameter("billcity");
+                 	      billstate = request.getParameter("billstate");
+                          billzip = Integer.parseInt(request.getParameter("billzip"));
+            	     }
+            	     else
+            	     {            	     
+            	    	 billaddr = address;           	    
+            	    	 billcity = city;            	    
+            	    	 billstate = state;            	    
+                    	 billzip = zip;
+            	     }
 
-	    			
-	    			java.sql.Connection connection = DatabaseConnection.connect();
-	                PreparedStatement pst =(PreparedStatement) connection.prepareStatement("INSERT INTO orders (id, firstname, lastname, email, phone, address, city, state, zip, billaddr, billcity, billstate, billzip, method, productid, quantity, cardname, cardnumber, expmonth, expyear, cvv) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
-	    			
-	    			
-	                pst.setInt(1, id);
-	    			pst.setString(2,firstname);
-	                pst.setString(3,lastname);  
-	                pst.setString(4,email);        
-	                pst.setString(5,phone);
-	                pst.setString(6,address);
-	                pst.setString(7,city);
-	                pst.setString(8,state);
-	                pst.setInt(9, zip);	                
-	                pst.setString(10,address);
-	                pst.setString(11,city);
-	                pst.setString(12,state);
-	                pst.setInt(13,zip);	                
-	                pst.setString(14,method);
-	                pst.setInt(15,9876);
-	                pst.setInt(16,1);
-	                pst.setString(17,cardname);
-	                pst.setString(18,cardnumber);
-	                pst.setInt(19,expmonth);
-	                pst.setInt(20,expyear);
-	                pst.setInt(21,cvv);
+            	     String cardname = request.getParameter("cardname");
+            	     String cardnumber = request.getParameter("cardnumber");
+                     int expmonth = Integer.parseInt(request.getParameter("expmonth"));
+                     int expyear = Integer.parseInt(request.getParameter("expyear"));
+                     int cvv = Integer.parseInt(request.getParameter("cvv"));  
+            	     String method = request.getParameter("method");
+                     int productid = Integer.parseInt(request.getParameter("productid"));
+
+                     			java.sql.Connection connection = DatabaseConnection.connect();
+                     			PreparedStatement pst =(PreparedStatement) connection.prepareStatement("INSERT INTO orders (firstname, lastname, email, phone, address, city, state, zip, billaddr, billcity, billstate, billzip, method, productid, quantity, cardname, cardnumber, expmonth, expyear, cvv) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+	    				    			
+	    			pst.setString(1,firstname);
+	                pst.setString(2,lastname);  
+	                pst.setString(3,email);        
+	                pst.setString(4,phone);
+	                pst.setString(5,address);
+	                pst.setString(6,city);
+	                pst.setString(7,state);
+	                pst.setInt(8, zip);	                
+	                pst.setString(9,billaddr);
+	                pst.setString(10,billcity);
+	                pst.setString(11,billstate);
+	                pst.setInt(12,billzip);	                
+	                pst.setString(13,method);
+	                pst.setInt(14,productid);
+	                pst.setInt(15,quantity);
+	                pst.setString(16,cardname);
+	                pst.setString(17,cardnumber);
+	                pst.setInt(18,expmonth);
+	                pst.setInt(19,expyear);
+	                pst.setInt(20,cvv);
 	                
-	                int x=pst.executeUpdate();    
+	                int x = pst.executeUpdate();    
 	                
-	                if(x==1)    
+	                if(x == 1)    
 	                {    
-	                out.println("Values Inserted Successfully");    
+	                	   out.println("<div class=\"content confirmation\">\n" + 
+	           	         		"                <h1>Thank you for your order "+firstname +"</h1>\n" + 
+	           	         		"                <div style=\"display: flex;\">\n" + 
+	           	         		"                    <div class=\"detail\">\n" + 
+	           	         		"                        <h2>Order Information</h2>\n" + 
+	           	         		"                        <p>Order ID:"+ id +"</p>\n" + 
+	           	         		"                        <p>Email: "+ email +"</p>\n" + 
+	           	         		"                        <p>Phone Number: "+ phone +"</p>\n" + 
+	           	         		"\n" + 
+	           	         		"                        <h2>Product Information</h2>\n" + 
+	           	         		"                        <p>Product:"+ name +" </p>\n" + 
+	           	         		"                        <p>Quantity: "+ quantity +"</p>\n" + 
+	           	         		"                        <p>Total Price: "+"</p>\n" + 
+	           	         		"\n" + 
+	           	         		"                        <h2>Shipping Information</h2>\n" + 
+	           	         		"                        <p>Method: "+ method +"</p>\n" + 
+	           	         		"                        <p>Address:"+ address +" </p>\n" + 
+	           	         		"                        <p>City: "+ city +"</p>\n" + 
+	           	         		"                        <p>State: "+ state +"</p>\n" + 
+	           	         		"                        <p>Zip Code: "+ zip +" </p>\n" + 
+	           	         		"                    </div>\n" + 
+	           	         		"                    <div>\n" + 
+	           	         		"                        <img src=\""+thumbnail+"\" width=\"175\"\n" + 
+	           	         		"                                alt=\"\" style=\"margin-left:100px;margin-top: 100px;\"/>\n" + 
+	           	         		"                    </div>\n" + 
+	           	         		"                </div>");         
 	                } 
 	                else 
-	                {
-	                	out.println("Error");
-	                }
+	                	{
+	                			out.println("Error! Please contact customer service");
+	                	}	
 	                
-	                pst.close();
-              
-            
+	                
+	                
+	                pst.close();   
+	              
+	                
+ 
        		 out.println("</div>");
        		 out.println("</div>");	
        		 out.println("<br><div class=\"footer\">\n" + 
@@ -238,8 +263,7 @@ finally
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+		service(request, response);	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
