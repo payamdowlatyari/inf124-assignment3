@@ -3,14 +3,18 @@ package iae.s20;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Stack;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class HomeServlet
@@ -28,9 +32,17 @@ public class HomeServlet extends HttpServlet {
     }
     
     
-    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {	
+    @SuppressWarnings("unchecked")
+	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {	
 	   	
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        Stack<Integer> prevItemsViewed = (Stack<Integer>) session.getAttribute("prevItemsViewed");
+        if(prevItemsViewed == null) {
+        	Stack<Integer> newPrevItemsViewed = new Stack<Integer>();
+        	session.setAttribute("prevItemsViewed", newPrevItemsViewed);
+        	prevItemsViewed = newPrevItemsViewed;
+        }
            
            response.setContentType("text/html");
            response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
@@ -58,69 +70,98 @@ public class HomeServlet extends HttpServlet {
                out.println("<li><a href=\"AboutServlet\">About Us</a></li> ");
                out.println("<li><a href=\"ContactServlet\">Contact Us</a></li>");
                out.println("</ul></div></div>");
-               out.println(" <div class=\"main\">");
-               out.println(" <div class=\"content\">");          
-               out.println(" <br><br><h1>New Product</h1>");
+               int prevItemsRendered = 0;
+               try(Connection connection = DatabaseConnection.connect()) { 
+	               out.println(" <div class=\"main\">");
+	               out.println(" <div class=\"content\">");   
+//	               out.println("<br><br><h1>Previously Viewed Items</h1>");
+//	               out.println("<table width='100% cellspacing=20'>");
+//	               out.println("<tbody><tr>");
+//	               for(Integer id : prevItemsViewed) {
+//	            	   if(prevItemsRendered < 5) {
+//		            	   Statement st = connection.createStatement();
+//		            	   ResultSet rs = st.executeQuery("select * from products where id=" + Integer.toString(id) + ";");
+//		            	   while(rs.next()) {
+//		            		   out.println("<td class='product'>");
+//		            		   String idStr = rs.getString("id");   	 
+//		  	       	         String name = rs.getString("name");    	
+//		  	       	         String price = rs.getString("price");    	         
+//		  	       	         String thumbnail = rs.getString("thumbnail");
+//		  	       	         String category = rs.getString("category");
+//		  	       	         thumbnail = "assets/" + thumbnail;
+//		  	       	         
+//		  	       	         out.println("<img src='" + thumbnail + "'/>");
+//		  	       	         out.println("<h4>" + category + "</h4>");
+//		  	       	         out.println("<h2>" + name + "</h2>");
+//		  	       	         out.println("<h3>" + price + "</h3>");
+//			  	       	    out.println("<form  action=\"DetailServlet\" method=\"GET\">");
+//		                    out.println("<input type=hidden id=id name=id value="+ idStr +">");
+//		                    out.println("<input type=submit>");               
+//		                    out.println("</form>"); 
+//		                    out.println("</td>");
+//		            	   }
+//		            	   prevItemsRendered += 1;
+//	            	   }
+//	               }
+//	               out.println("</tr></tbody></table>");
+	               request.getRequestDispatcher("PreviousItems").include(request, response);
+	               out.println(" <br><br><h1>New Product</h1>");
 
-               String id = ""; 
-       		String name = "";
-       		String price = "";
-       		String thumbnail = "";
-       		String category = "";
-       		
-       		
-       		try {   		
+		            String id = ""; 
+		       		String name = "";
+		       		String price = "";
+		       		String thumbnail = "";
+		       		String category = "";
        			
-       			java.sql.Connection connection = DatabaseConnection.connect();
                    Statement st = connection.createStatement();    	 
                    ResultSet rs = st.executeQuery("SELECT * FROM products;");
                    
                    out.println("<table width=\"100% cellspacing=20\">");
                    out.println( "<tbody><tr>");
        	      // iterate through the java resultset
-       	      while (rs.next())
-       	      {
-       	    	  out.println("<td class=\"product\">");
-
-       	    	 id = rs.getString("id");   	 
-       	         name = rs.getString("name");    	
-       	         price = rs.getString("price");    	         
-       	         thumbnail = rs.getString("thumbnail");
-       	         category = rs.getString("category");
-       	         thumbnail = "assets/" + thumbnail; 
-       	         
-       	         
-       	         out.println("<img src=\""+thumbnail+"\"/>");
-       	         out.println("<h4>"+ category +"</h4>");
-                    out.println("<h2>"+ name +"</h2>");
-                    out.println("<h3>"+ price +"</h3>");
-
-                    out.println("<form  action=\"DetailServlet\" method=\"GET\">");
-                    out.println("<input type=hidden id=id name=id value="+ id +">");
-                    out.println("<input type=submit>");               
-                    out.println("</form>"); 
-                    out.println("</td>");
-                    
-                    if (Integer.parseInt(id) == 5) {               	 
-                   	 out.println("</tr>");                 	 
-                   	 out.println("</table>\n" + 
-                   	 		"            </div>\n" + 
-                   	 		"            <div class=\"hotdeal\">\n" + 
-                   	 		"                <div class=\"detail\">\n" + 
-                   	 		"                    <h1>Back to school deal</h1>\n" + 
-                   	 		"                    <div class=\"countdown\">00 DAYS, 00 HOURS, 00 MINS, 00 SECS</div>\n" + 
-                   	 		"                    <h2>UP TO 50% OFF</h2>\n" + 
-                   	 		"                    <a href=\"products.php\" class=\"getdeal\">Shop Now</a>\n" + 
-                   	 		"                </div>\n" + 
-                   	 		"            </div>\n" + 
-                   	 		"            <div class=\"content\">\n" + 
-                   	 		"                <h1>TOP SELLING</h1>\n" + 
-                   	 		"                <table width=\"100%\" cellspacing=\"20\"><br>");
-                   	 
-                   	out.println("<tr>");      
-                    }
-
-       	      }
+	       	      while (rs.next())
+	       	      {
+	       	    	  out.println("<td class=\"product\">");
+	
+	       	    	 id = rs.getString("id");   	 
+	       	         name = rs.getString("name");    	
+	       	         price = rs.getString("price");    	         
+	       	         thumbnail = rs.getString("thumbnail");
+	       	         category = rs.getString("category");
+	       	         thumbnail = "assets/" + thumbnail; 
+	       	         
+	       	         
+	       	         out.println("<img src=\""+thumbnail+"\"/>");
+	       	         out.println("<h4>"+ category +"</h4>");
+	                    out.println("<h2>"+ name +"</h2>");
+	                    out.println("<h3>"+ price +"</h3>");
+	
+	                    out.println("<form  action=\"DetailServlet\" method=\"GET\">");
+	                    out.println("<input type=hidden id=id name=id value="+ id +">");
+	                    out.println("<input type=submit>");               
+	                    out.println("</form>"); 
+	                    out.println("</td>");
+	                    
+	                    if (Integer.parseInt(id) == 5) {               	 
+	                   	 out.println("</tr>");                 	 
+	                   	 out.println("</table>\n" + 
+	                   	 		"            </div>\n" + 
+	                   	 		"            <div class=\"hotdeal\">\n" + 
+	                   	 		"                <div class=\"detail\">\n" + 
+	                   	 		"                    <h1>Back to school deal</h1>\n" + 
+	                   	 		"                    <div class=\"countdown\">00 DAYS, 00 HOURS, 00 MINS, 00 SECS</div>\n" + 
+	                   	 		"                    <h2>UP TO 50% OFF</h2>\n" + 
+	                   	 		"                    <a href=\"products.php\" class=\"getdeal\">Shop Now</a>\n" + 
+	                   	 		"                </div>\n" + 
+	                   	 		"            </div>\n" + 
+	                   	 		"            <div class=\"content\">\n" + 
+	                   	 		"                <h1>TOP SELLING</h1>\n" + 
+	                   	 		"                <table width=\"100%\" cellspacing=\"20\"><br>");
+	                   	 
+	                   	out.println("<tr>");      
+	                    }
+	
+	       	      }
        	      
        	     out.println("</tr></tbody>");      		
         		 out.println("</table>");

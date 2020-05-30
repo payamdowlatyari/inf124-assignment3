@@ -3,32 +3,40 @@ package iae.s20;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class ContactServlet
+ * Servlet implementation class OrderConfirmation
  */
-//@WebServlet("/ContactServlet")
-public class ContactServlet extends HttpServlet {
+@WebServlet("/OrderConfirmation")
+public class OrderConfirmation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ContactServlet() {
+    public OrderConfirmation() {
         super();
         // TODO Auto-generated constructor stub
     }
-    
-    
- public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {	
-	   	
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession(); 
            
            response.setContentType("text/html");
            response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
@@ -37,9 +45,11 @@ public class ContactServlet extends HttpServlet {
                out.println("<!DOCTYPE html>");
                out.println("<html>");
                out.println("<head>");
-               out.println("<title>Contact Us</title>");  
+               out.println("<title>Confirmation</title>");  
                out.println("<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css\" integrity=\"sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk\" crossorigin=\"anonymous\">");
                out.println(" <link href=\"style.css\" rel=\"stylesheet\">");
+               out.println(" <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js\"></script>\n" + 
+	            		"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>");
                out.println("</head>");
                out.println("<body>");          
                out.println("<div class=\"container\">");         
@@ -54,31 +64,39 @@ public class ContactServlet extends HttpServlet {
                out.println("<li><a href=\"HomeServlet\">Home</a></li> ");
                out.println("<li><a href=\"ProductServlet\">Products</a></li> ");
                out.println("<li><a href=\"AboutServlet\">About Us</a></li> ");
-               out.println("<li><a href=\"ContactServlet\"class=\"active\">Contact Us</a></li>");
+               out.println("<li><a href=\"ContactServlet\">Contact Us</a></li>");
                out.println("</ul></div></div>");
                out.println(" <div class=\"main\">");
-               out.println(" <div class=\"content\">");          
-               out.println("<br><br>  <h1>Contact Us</h1>\n" + 
-               		"                <div class=\"container\">\n" + 
-               		"\n" + 
-               		"                      <form name=\"contactform\" method=\"post\" action=\"mailto:info@sportstore.com\" enctype=\"text/plain\">\n" + 
-               		"                      <label for=\"fname\">First Name</label>\n" + 
-               		"                      <input type=\"text\" id=\"fname\" name=\"firstname\" placeholder=\"Your name...\" required>\n" + 
-               		"\n" + 
-               		"                      <label for=\"lname\">Last Name</label>\n" + 
-               		"                      <input type=\"text\" id=\"lname\" name=\"lastname\" placeholder=\"Your last name...\" required>\n" + 
-               		"\n" + 
-               		"                      <label for=\"email\">E-mail</label>\n" + 
-               		"                      <input type=\"text\" id=\"email\" name=\"E-mail\" placeholder=\"Your E-mail address...\" required>\n" + 
-               		"\n" + 
-               		"                      <label for=\"subject\">Subject</label>\n" + 
-               		"                      <textarea id=\"subject\" name=\"subject\" placeholder=\"Write something...\" style=\"height:200px\"></textarea>\n" + 
-               		"\n" + 
-               		"                      <input type=\"submit\" value=\"Submit\">\n" + 
-               		"\n" + 
-               		"                    </form><br><br>\n" + 
-               		"                  </div>");
-
+               out.println(" <div class=\"content\">"); 
+               out.println(" <h1><br>Confirmation</h1>\n");
+               
+               
+               try(java.sql.Connection connection = DatabaseConnection.connect()) {                               
+            	       
+            	   @SuppressWarnings("unchecked")
+            	   HashMap<Integer, Integer> idList = (HashMap<Integer, Integer>) session.getAttribute("idList");
+            	   int orderID = (int) session.getAttribute("newID");
+            	   out.println("<h4>Order has been confirmed with id: "  + Integer.toString(orderID) + "</h4>");
+            	   out.println("<h3>Products Purchased</h3>");
+            	   out.println("<table><tr>");
+            	   out.println("<th>Product</th>");
+            	   out.println("<th>Quantity</th>");
+            	   out.println("</tr>");
+            	   for(Map.Entry<Integer, Integer> mapElement : idList.entrySet()) {
+            		   out.println("<tr>");
+            		   Statement st = connection.createStatement();    	 
+            		   ResultSet rs = st.executeQuery("SELECT * FROM products where id= " + Integer.toString(mapElement.getKey()));
+            		   if(rs.next()) {
+            			   String name = rs.getString("name");
+            			   out.println("<td>" + name + "</td>");
+            		   }
+            		   out.println("<td>" + Integer.toString(mapElement.getValue()) + "</td>");
+            		   out.println("</tr>");
+            	   }
+            	   out.println("</table>");
+            	   
+	                
+ 
        		 out.println("</div>");
        		 out.println("</div>");	
        		 out.println("<br><div class=\"footer\">\n" + 
@@ -132,17 +150,25 @@ public class ContactServlet extends HttpServlet {
                		"    </p>\n" + 
                		"</div>");       
                out.println("</div>");
-               out.println(" <script type=\"text/javascript\" src=\"main.js\"></script>");
+               out.println(" <script type=\"text/javascript\" src=\"\"></script>");
                out.println("</body>");
-               out.println("</html>");			
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+               out.println("</html>");	
+               
+	    	                
+			}
+			catch (Exception e)
+			{
+			    System.err.println ("Cannot connect to database server");
+			    e.printStackTrace();
+			
+			
+			} 
+			finally 
+			{    			
+				HashMap<Integer, Integer> newIdList = new HashMap<Integer, Integer>();
+				session.setAttribute("idList", newIdList);
+				
+			}
 	}
 
 	/**

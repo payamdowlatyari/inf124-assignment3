@@ -2,7 +2,13 @@ package iae.s20;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +32,7 @@ public class CartServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
- public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {	
+ public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {	
 	   	
         response.setContentType("text/html;charset=UTF-8");
            
@@ -34,20 +40,26 @@ public class CartServlet extends HttpServlet {
            response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
            PrintWriter out = response.getWriter();
 
-           String quantity = request.getParameter("quantity");
+//           String quantity = request.getParameter("quantity");
           
            HttpSession session = request.getSession(false);
-           String id = (String)session.getAttribute("id"); 
-           String price = (String)session.getAttribute("price");
-           String name = (String)session.getAttribute("name");
-           float pi = Float.valueOf(price.trim()).floatValue();
-           float qi = Float.valueOf(quantity.trim()).floatValue();
-           float priceFloat = pi * qi;
+           HashMap<Integer, Integer> idList = (HashMap<Integer, Integer>)session.getAttribute("idList");
+           if(idList == null) {
+        	   HashMap<Integer, Integer> newIdList = new HashMap<Integer, Integer>();
+        	   session.setAttribute("idList", newIdList);
+        	   idList = newIdList;
+           }
+//           String id = (String)session.getAttribute("id"); 
+//           String price = (String)session.getAttribute("price");
+//           String name = (String)session.getAttribute("name");
+//           float pi = Float.valueOf(price.trim()).floatValue();
+//           float qi = Float.valueOf(quantity.trim()).floatValue();
+//           float priceFloat = pi * qi;
            
            //String totalPrice = "";
    
-	         session.setAttribute("quantity", quantity); 
-	         session.setAttribute("priceFloat", priceFloat);
+//	         session.setAttribute("quantity", quantity); 
+//	         session.setAttribute("priceFloat", priceFloat);
 
                out.println("<!DOCTYPE html>");
                out.println("<html>");
@@ -75,21 +87,74 @@ public class CartServlet extends HttpServlet {
                out.println("</ul></div></div>");
                out.println(" <div class=\"main\">");
                out.println(" <div class=\"content\">");          
-               out.println("<br><br>  <h1>Shopping Card</h1>");                             
-               out.println("<div class=\"shopping-cart\"> <form method=\"GET\" action=\"CheckOutServlet\">\n" + 
-            			"               <span class=\"price-item\">"+ name +"</span>" + 
-                  		"\n" + 
-              		"               <span class=\"price-item\" id=\"price-cart\">&nbsp; &nbsp;$"+ price +"</span>" + 
-              		"<input type=hidden id=\"unitPrice\" name=\"price-cart\" value="+ price +">" +
-
-              		"               <span class=\"price-item\">X "+ quantity + "</span>" + 
-              		" <span class=\"price-item\" id=\"total-price-cart\"> <span>" + priceFloat +"</span></span>" + 
-
-              		"<input type=hidden id=\"quantity-cart\" name=\"quantity\" value="+ quantity +">" +
-              		"                   <input class=\"checkout-btn\" type=\"submit\" value=\"Check Out\">\n" +             		              
-
-              		"               </form> </div>");
-       		  out.println("</div>");
+               out.println("<br><br>  <h1>Shopping Card</h1>");   
+               out.println("<div class='shopping-cart'>");
+               out.println("<form method='POST' action='ConfirmationServlet'>");
+               out.println("<ul>");
+               float subtotal = (float) 0.0;
+               for (HashMap.Entry<Integer, Integer> entry : idList.entrySet()) {
+            	   out.println("<li>");
+            	   try(java.sql.Connection connection = DatabaseConnection.connect()){
+            		   int id = entry.getKey();
+            		   int quantity = entry.getValue();
+            		   Statement st = connection.createStatement();
+            		   ResultSet rs = st.executeQuery("SELECT * FROM products where id= " + id);
+            		   if(rs.next()) {
+	            		   String name = rs.getString("name");
+	            		   Float price = rs.getFloat("price");
+	            		   subtotal += (quantity*price);
+	            		   out.println("<ul>" + name + "\tPrice:" + Float.toString(price) + " Quantity:" + Integer.toString(quantity) + "</ul>");
+            		   }
+            	   }
+            	   catch(Exception e) {
+            		   e.printStackTrace();
+            	   }
+       			}
+               session.setAttribute("subtotal", subtotal);
+               
+               out.println("</ul>");
+               out.println("<p>Subtotal: " + Float.toString(subtotal) + "</p>");
+               out.println("<div class='orderform'>");
+               out.println("<div class='row'>");
+               out.println("<div class='col-50'>");
+               out.println("<h3>Buyer's Information</h3>");
+               out.println("<label for='fname'>First Name</label>");
+               out.println("<input type='text' id='name' name='fullname' placeholder='John White' required />");
+               out.println("<label for='email'>Email</label>");
+               out.println("<input type='text' id='email' name='email' placeholder='jwhite@john.com' required />");
+               out.println("<label for='email'>Phone Number</label>");
+               out.println("<input type='text' id='phoneNumber' name='phoneNumber' placeholder='1231231234' required />");
+               out.println("<h3>Shpping Information</h3>");
+               out.println("<label for='adr'>Address</label>");
+               out.println("<input type='text' id='adr' name='address' placeholder='123 Bob St' required />");
+               out.println("<label for='city'>City</label>");
+               out.println("<input type='text' id='city' name='city' placeholder='New York City' required />");
+               out.println("<label for='state'>State</label>");
+               out.println("<input type='text' id='state' name='state' placeholder='New York' required />");
+               out.println("<label for='zip'>Zip Code</label>");
+               out.println("<input type='text' id='zip' name='zip' placeholder='10001' required />");
+               out.println("<h3>Payment Details</h3>");
+               out.println("<label for='cname'>Name on Card</label>");
+               out.println("<input type='text' id='cname' name='cardname' placeholder='John White' required />");
+               out.println("<label for='ccnum'>Credit Card Number</label>");
+               out.println("<input type='text' id='ccnum' name='cardnumber' placeholder='111-111-111' required />");
+               out.println("<label for='expmonth'>Expiry Month</label>");
+               out.println("<select id='expmonth' name='expmonth' placeholder='September' required>");
+               out.println("<option selected>1</option>");
+               for(int i = 2; i <= 12; i++) {
+            	   out.println("<option>" + Integer.toString(i) + "</option>");
+               }
+               out.println("</select>");
+               out.println("<label for='expyear'>Expiry year</label>");
+               out.println("<input type='text' id='expyear' name='expyear' placeholder='2020' required />");
+               out.println("<label for='expyear'>Expiry year</label>");
+               out.println("<input type='text' id='expyear' name='expyear' placeholder='2020' required />");
+               out.println("<label for='cvv'>CVV</label>");
+               out.println("<input type='text' id='cvv' name='cvv' placeholder='352' required />");
+               out.println("<button type='submit' id='order-submit' class='js-submit-order btn' tabindex='0' id='form-submit' name='purchase'>");
+               out.println("Submit Order</button>");
+               out.println("</div></div></div>");
+               out.println("</form></div>");
        		  out.println("</div>");	
        		  out.println("<br><div class=\"footer\">\n" + 
        				 "        <table width=\"100%\" cellspacing=\"20\">\n" + 
@@ -150,15 +215,34 @@ public class CartServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		service(request, response);	}
+//	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		// TODO Auto-generated method stub
+//		service(request, response);	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		HttpSession session = request.getSession(true);
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, Integer> idList =(HashMap<Integer, Integer>)session.getAttribute("idList");
+		if(idList == null) {
+			HashMap<Integer, Integer> newIdList = new HashMap<Integer, Integer>();
+			session.setAttribute("idList", newIdList);
+			idList = newIdList;
+		}
+		String idStr = request.getParameter("id");
+		String quantityStr = request.getParameter("quantity");
+		int id = Integer.parseInt(idStr);
+		int quantity = Integer.parseInt(quantityStr);
+		if(!idList.containsKey(id)) {
+			idList.put(id, quantity);
+		}
+		else {
+			int initialQuantity = idList.get(id);
+			idList.put(id, quantity + initialQuantity);
+		}
+		session.setAttribute("idList", idList);
 		doGet(request, response);
 	}
 

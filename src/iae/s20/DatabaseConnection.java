@@ -8,16 +8,16 @@ public class DatabaseConnection {
 
     public static Connection connect()  throws SQLException, ClassNotFoundException {
        
-        String username = "root";
-        String password = "";
+        String username = "sanjith";
+        String password = "sanjith";
 
-         String url = "jdbc:mysql://127.0.0.1:3306/ssdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+         String url = "jdbc:postgresql://localhost/ssdb";
          
-         try{
-        		Class.forName("com.mysql.jdbc.Driver");
-        	} catch (Exception e){
-        		System.out.println(e.toString());
-        	}
+//         try{
+//        		Class.forName("com.mysql.jdbc.Driver");
+//        	} catch (Exception e){
+//        		System.out.println(e.toString());
+//        	}
 
         	try{
         	// DB connection code

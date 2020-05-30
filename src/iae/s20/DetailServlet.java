@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Stack;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -93,7 +94,19 @@ public class DetailServlet extends HttpServlet {
 	    	         thumbnail = "assets/" + thumbnail; 
 	    	         
 	    	         
-	    	         HttpSession session = request.getSession(); /* Creating a new session*/	    	         
+	    	         HttpSession session = request.getSession(); /* Creating a new session*/
+	    	         @SuppressWarnings("unchecked")
+					Stack<Integer> prevViewedItems = (Stack<Integer>) session.getAttribute("prevItemsViewed");
+	    	         if(prevViewedItems == null) {
+	    	        	 Stack<Integer> newPVI = new Stack<Integer>();
+	    	        	 session.setAttribute("prevItemsViewed", newPVI);
+	    	        	 prevViewedItems = newPVI;
+	    	         }
+	    	         System.out.println("At page: " + id);
+	    	         prevViewedItems.push(Integer.parseInt(id));
+	    	         session.setAttribute("prevItemsViewed", prevViewedItems);
+	    	         
+	    	         
 	    	         session.setAttribute("id", id); 
 	    	         session.setAttribute("name", name); 
 	    	         session.setAttribute("summary", summary); 
@@ -119,7 +132,7 @@ public class DetailServlet extends HttpServlet {
 	        		 out.println("<p>" +  category + " </p>");
 	        		 
 	                
-	                 out.println("<form  action=\"CartServlet\" method=\"GET\">");
+	                 out.println("<form  action=\"CartServlet\" method=\"POST\">");
 	                 out.println("<h4>Quantity: </h4>");
 	        		 out.println(" <select class=\"quantity-option\" id=\"quantity\" onchange=\"updatePrice()\" name=\"quantity\">\n" + 
 	        		 		"                                    <option>1</option>\n" + 

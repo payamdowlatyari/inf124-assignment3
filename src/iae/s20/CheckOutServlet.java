@@ -30,7 +30,7 @@ public class CheckOutServlet extends HttpServlet {
     }
     
     
-public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {	
+public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {	
 	   	
         response.setContentType("text/html;charset=UTF-8");
            
@@ -110,7 +110,6 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
    	           		
                out.println(" <h1><br>Check Out Form</h1>\n" + 
                		"                <div class=\"orderform\">\n" + 
-               		"                    <form name=\"submitform\" id=\"submitform\" method=\"POST\" action=\"ConfirmationServlet\">\n" + 
                		"                        <p class=\"form-message\"></p>\n" + 
                		"                        <div class=\"row\">\n" + 
                		"                            <div class=\"col-50\">\n" + 
@@ -243,8 +242,7 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                        <button type=\"submit\" id=\"order-submit\" class=\"js-submit-order btn\" tabindex=\"0\" id=\"formSubmit\"\n" + 
                		"                            name=\"purchase\">\n" + 
                		"                            Submit Order\n" + 
-               		"                        </button>\n" + 
-               		"                    </form>");
+               		"                        </button>\n");
          
 
        		 out.println("</div>");
@@ -324,15 +322,16 @@ finally
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		service(request, response);	}
+//	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		// TODO Auto-generated method stub
+//		service(request, response);	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 		doGet(request, response);
 	}
 
