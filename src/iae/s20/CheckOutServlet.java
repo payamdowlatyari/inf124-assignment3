@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,8 +71,11 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                
                String id = (String)session.getAttribute("id"); 
                String quantity = (String)session.getAttribute("quantity"); 
-               float priceFloat = (float)session.getAttribute("priceFloat");
-               
+               //float priceFloat = (float)session.getAttribute("subtotal");
+       			Float subtotal = (Float)session.getAttribute("subtotal");
+       			String totalPrice = String.valueOf(subtotal);
+       			session.setAttribute(totalPrice ,"totalPrice");
+
                			session.setAttribute(id, "id");
                              
                               
@@ -177,8 +179,9 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"                                <input type=\"hidden\" style=\"margin-bottom: 20px\" name=id value= \"" + id +"\" >\n" + 
                		"                                <input type=\"hidden\" id=\"pid\" name=\"productid\" value=\"12345\" />\n" + 
 			
- 					"								<label for=\"cname\">Quantity</label>\n" + 
- 					"                               		 <input type=\"text\" id=\"quantity-form\" name=\"quantity\" value="+ quantity +" required />\n" + 
+// 					"								<label for=\"cname\">Quantity</label>\n" + 
+ 					"                               		 <input type=\"hidden\" id=\"quantity-form\" name=\"quantity\" value="+ quantity +" required />\n" + 
+ 					
                		"                                <label for=\"method\">Shipping method</label>\n" + 
                		"                                <select id=\"method\" name=\"method\">\n" + 
                		"                                    <option>Overnight ($11.00)</option>\n" + 
@@ -224,7 +227,7 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
                		"\n" + 
                		"                                    <div>Total Price:</div>\n" +
                		
-               		"                                    <div class=\"price-item\">&nbsp; &nbsp;$<span id=\"total-price\">"+ df.format(priceFloat) +"</span></div>\n" );
+               		"                                    <div class=\"price-item\">&nbsp; &nbsp;$<span id=\"total-price\">"+ subtotal +"</span></div>\n" );
 //               												out.printf("%.2f", priceFloat);
                												out.println("<div>Total Tax: </div>\n" + 
                		"                                    <div class=\"price-item\">+ $<span id=\"tax-amount\"></span>" +"</div>\n" + 

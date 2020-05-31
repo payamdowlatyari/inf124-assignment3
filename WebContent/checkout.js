@@ -3,8 +3,9 @@
 		  
 		var shipping = 9.50;
 		var taxRate = 0;
-		var totalPrice = document.getElementById('total-price').textContent;
-		var quantity = document.getElementById('quantity-form').textContent;
+		var totalPrice = document.getElementById('total-price').innerHTML.substring(0);
+		console.log(totalPrice);
+		//var quantity = document.getElementById('quantity-form').textContent;
 		
   $('#method').change(function () {
 	  

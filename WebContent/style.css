@@ -461,15 +461,16 @@ input[type=submit]:hover {
 
 .shopping-cart{
 	box-shadow: 1px 1px 10px #555555;
-	min-height: 80px;
+	min-height: 200px;
 	padding: 20px;
 }
 
-.shopping-cart span{
+.shopping-cart li{
 	
 	padding: 20px;
 }
 .shopping-cart .checkout-btn{
 	float: right;
+	padding-bottom: 50px;
 }
 

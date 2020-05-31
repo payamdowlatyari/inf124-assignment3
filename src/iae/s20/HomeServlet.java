@@ -5,12 +5,14 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Stack;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class HomeServlet
@@ -35,6 +37,15 @@ public class HomeServlet extends HttpServlet {
            response.setContentType("text/html");
            response.setCharacterEncoding(String.valueOf(StandardCharsets.UTF_8));
            PrintWriter out = response.getWriter();
+           
+           HttpSession session = request.getSession();
+           @SuppressWarnings("unchecked")
+           Stack<Integer> prevItemsViewed = (Stack<Integer>) session.getAttribute("prevItemsViewed");
+           if(prevItemsViewed == null) {
+           	Stack<Integer> newPrevItemsViewed = new Stack<Integer>();
+           	session.setAttribute("prevItemsViewed", newPrevItemsViewed);
+           	prevItemsViewed = newPrevItemsViewed;
+           }
            
                out.println("<!DOCTYPE html>");
                out.println("<html>");
@@ -62,12 +73,12 @@ public class HomeServlet extends HttpServlet {
                out.println(" <div class=\"content\">");          
                out.println(" <br><br><h1>New Product</h1>");
 
-               String id = ""; 
-       		String name = "";
-       		String price = "";
-       		String thumbnail = "";
-       		String category = "";
-       		
+                String id = ""; 
+       			String name = "";
+       		    String price = "";
+       		    String thumbnail = "";
+       		    String category = "";
+       		    //int prevItemsRendered = 0;
        		
        		try {   		
        			
@@ -122,9 +133,15 @@ public class HomeServlet extends HttpServlet {
 
        	      }
        	      
-       	     out.println("</tr></tbody>");      		
+       	      	 out.println("</tr></tbody>");      		
         		 out.println("</table>");
+                 request.getRequestDispatcher("PreviousItems").include(request, response);
+
         		 out.println("</div>");
+        		 
+//        		 out.println("<div class=\"container\" width=\"80%\">");
+//        		 out.println("</div>");
+
        		 out.println("</div>");
        		 out.println("</div>");	
        		 out.println("<br><div class=\"footer\">\n" + 

@@ -87,5 +87,16 @@
     <servlet-name>ConfirmationServlet</servlet-name>
     <url-pattern>/ConfirmationServlet</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>PreviousItems</servlet-name>
+    <servlet-class>iae.s20.PreviousItems</servlet-class>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>PreviousItems</servlet-name>
+    <url-pattern>/PreviousItems</url-pattern>
+  </servlet-mapping>
+   
+   
    
 </web-app>

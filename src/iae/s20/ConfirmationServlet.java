@@ -73,10 +73,14 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
             	   	 String name = (String) session.getAttribute("name");
             	   	 String thumbnail = (String) session.getAttribute("thumbnail");
             	   
-                     int id = Integer.parseInt((String) session.getAttribute("id")); 
+                     //int id = Integer.parseInt((String) session.getAttribute("id")); 
+                     int newID = (int)(Math.random()* 10000);
+         			//session.setAttribute("newID", newID);
                      int quantity = Integer.parseInt((String)session.getAttribute("quantity")); 
-                     //float totalPrice = Float.parseFloat((String)session.getAttribute("priceFloat"));
-                     
+                     String totalPrice = (String) session.getAttribute("totalPrice");
+                     //Float p = Float.parseFloat(totalPrice);
+                    // String quantity = (String)session.getAttribute("quantity"); 
+
                      String firstname = request.getParameter("firstname");
                      String lastname = request.getParameter("lastname");
                      String email = request.getParameter("email");
@@ -151,14 +155,14 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
 	           	         		"                <div style=\"display: flex;\">\n" + 
 	           	         		"                    <div class=\"detail\">\n" + 
 	           	         		"                        <h2>Order Information</h2>\n" + 
-	           	         		"                        <p>Order ID:"+ id +"</p>\n" + 
+	           	         		"                        <p>Order ID:"+ newID +"</p>\n" + 
 	           	         		"                        <p>Email: "+ email +"</p>\n" + 
 	           	         		"                        <p>Phone Number: "+ phone +"</p>\n" + 
 	           	         		"\n" + 
-	           	         		"                        <h2>Product Information</h2>\n" + 
-	           	         		"                        <p>Product:"+ name +" </p>\n" + 
-	           	         		"                        <p>Quantity: "+ quantity +"</p>\n" + 
-	           	         		"                        <p>Total Price: "+"</p>\n" + 
+//	           	         		"                        <h2>Product Information</h2>\n" + 
+//	           	         		"                        <p>Product:"+ name +" </p>\n" + 
+//	           	         		"                        <p>Quantity: "+ quantity +"</p>\n" + 
+//	           	         		"                        <p>Total Price: "+totalPrice+"</p>\n" + 
 	           	         		"\n" + 
 	           	         		"                        <h2>Shipping Information</h2>\n" + 
 	           	         		"                        <p>Method: "+ method +"</p>\n" + 
@@ -167,10 +171,10 @@ public void service(HttpServletRequest request, HttpServletResponse response) th
 	           	         		"                        <p>State: "+ state +"</p>\n" + 
 	           	         		"                        <p>Zip Code: "+ zip +" </p>\n" + 
 	           	         		"                    </div>\n" + 
-	           	         		"                    <div>\n" + 
-	           	         		"                        <img src=\""+thumbnail+"\" width=\"175\"\n" + 
-	           	         		"                                alt=\"\" style=\"margin-left:100px;margin-top: 100px;\"/>\n" + 
-	           	         		"                    </div>\n" + 
+//	           	         		"                    <div>\n" + 
+//	           	         		"                        <img src=\""+thumbnail+"\" width=\"175\"\n" + 
+//	           	         		"                                alt=\"\" style=\"margin-left:100px;margin-top: 100px;\"/>\n" + 
+//	           	         		"                    </div>\n" + 
 	           	         		"                </div>");         
 	                } 
 	                else 
